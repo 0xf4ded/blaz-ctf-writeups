@@ -3,6 +3,8 @@
 
 Tags: EVM, Defi, RE
 
+Author: [tonyke_bot](https://x.com/tonyke_bot)
+
 This challenge was a part of [Fuzzland's BlazCTF 2024](https://ctf.blaz.ai) and was solved by 21 teams.
 ## Introduction
 In the handouts was the following contract (comments not included):
