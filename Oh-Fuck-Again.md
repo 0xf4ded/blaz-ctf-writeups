@@ -6,6 +6,8 @@ Tags: EVM, Defi, RE
 Author: [tonyke_bot](https://x.com/tonyke_bot)
 
 This challenge was a part of [Fuzzland's BlazCTF 2024](https://ctf.blaz.ai) and was solved by 21 teams.
+
+Challenge code accessible [here](https://github.com/fuzzland/blazctf-2024/tree/main/oh-fuck-oym).
 ## Introduction
 In the handouts was the following contract (comments not included):
 ```solidity
