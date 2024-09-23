@@ -11,6 +11,8 @@ Challenge code accessible [here](https://github.com/fuzzland/blazctf-2024/tree/m
 ## Introduction
 In the handouts was the following contract (comments not included):
 ```solidity
+// src/challenge.sol
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
 import {PoolKey} from "v4-core/src/types/PoolKey.sol";
@@ -95,6 +97,7 @@ Also included were the RPC endpoints, the private key of the player and the addr
 ## The Challenge
 The Hook contract can be seen below:
 ```solidity
+// src/Hook.sol
 pragma solidity ^0.8.24;
 
 import {BaseHook} from "v4-periphery/src/base/hooks/BaseHook.sol";
@@ -414,6 +417,8 @@ As we can see, this will unlock the contract for only one transaction, and needs
 
 Since we have all the data we need for the swap, we can code the contract:
 ```solidity
+// src/HookSweep.sol
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
 import {Hooks} from "v4-core/src/libraries/Hooks.sol";
@@ -461,6 +466,8 @@ The contract works like this:
 
 Let's put all of this knowledge to the test with a Foundry test:
 ```solidity
+// test/Sweep.t.sol
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
 import {Test, console2} from "forge-std/Test.sol";
@@ -511,6 +518,8 @@ Logs:
 
 We can now write a Foundry script to deploy our contract and make our swap:
 ```solidity
+// script/Solve.s.sol
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "forge-std/Script.sol";
@@ -536,6 +545,7 @@ contract Solve is Script {
 ```
 
 Running this script using `forge script` yields us our expected result and we can now get our flag:
+
 ![image](https://github.com/user-attachments/assets/85f8828a-792f-47da-8586-3889593f8fbd)
 
 
