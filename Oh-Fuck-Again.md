@@ -137,7 +137,7 @@ interface OEM {
 
 interface IERC20 {
     function transfer(address, uint256) external;
-    function balanceOf(address) external returns (uint256);
+    function balanceOf(address) external view returns (uint256);
 }
 
 contract RecoverTokens {
