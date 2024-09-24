@@ -337,7 +337,7 @@ struct PoolKey {
     IHooks hooks;
 }
 ```
-and
+and `SwapParams` is
 ```solidity
 struct SwapParams {
     /// Whether to swap token0 for token1 or vice versa
@@ -361,7 +361,7 @@ We can now construct the data to use for our swap.
 
 - `sqrtPriceLimitX96`: `type(uint96).max`, since the `startingPrice` in [`challenge.sol`](https://github.com/fuzzland/blazctf-2024/blob/main/tutori4l/challenge/project/src/challenge.sol) was `79228162514264337593543950336`, or `type(uint96).max + 1`          
 
-We would also run into this check in [`Pool.sol`](https://github.com/fuzzland/blazctf-2024/blob/main/tutori4l/challenge/project/lib/v4-core/src/libraries/Pool.sol#L324), which prevents the limit from exceeding that number:
+We would otherwise run into this check in [`Pool.sol`](https://github.com/fuzzland/blazctf-2024/blob/main/tutori4l/challenge/project/lib/v4-core/src/libraries/Pool.sol#L324), which prevents the limit from exceeding that number:
 ```
 if (params.sqrtPriceLimitX96 >= slot0Start.sqrtPriceX96()) {
     PriceLimitAlreadyExceeded.selector.revertWith(slot0Start.sqrtPriceX96(), params.sqrtPriceLimitX96);
@@ -412,6 +412,7 @@ function unlock(bytes calldata data) external override returns (bytes memory res
     Lock.lock();
 }
 ```
+More about this can be found [here](https://docs.uniswap.org/contracts/v4/guides/unlock-callback).
 
 As we can see, this will unlock the contract for only one transaction, and needs to call a callback function on `msg.sender`. This means that we cannot execute the swap from an EOA, but will have to do it through a contract.
 
@@ -462,7 +463,7 @@ The contract works like this:
 - Player calls `swap()`
 - `swap()` calls `PoolManager.unlock()`
 - `unlock()` calls `HookSweep.unlockCallBack()`
-- `unlockCallBack()` calls `swap()`, as the contract is now unlocked
+- `unlockCallBack()` calls `PoolManager.swap()`, as the contract is now unlocked
 
 Let's put all of this knowledge to the test with a Foundry test:
 ```solidity
@@ -515,6 +516,17 @@ Logs:
   Player's balance before:  1000000000000000000
   Player's balance after:  2000000000000000000
 ```
+
+One might wonder how the swap goes through, if we are giving an input of `1001 ether`, while not having that amount.
+In `challenge.sol`, the pool was initialized, but was without liquidity.
+
+This means that in the `Pool.sol` contract, no swapping actually takes place in the `swap` function, resulting in the delta calculated here to result in 0:
+```solidity
+swapDelta = toBalanceDelta(
+    (params.amountSpecified - amountSpecifiedRemaining).toInt128(), amountCalculated.toInt128()
+);
+```
+Which means that no tokens are requested from us.
 
 We can now write a Foundry script to deploy our contract and make our swap:
 ```solidity
