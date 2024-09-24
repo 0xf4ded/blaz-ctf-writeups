@@ -558,6 +558,7 @@ contract Solve is Script {
 
 Running this script using `forge script` yields us our expected result and we can now get our flag:
 
-![image](https://github.com/user-attachments/assets/85f8828a-792f-47da-8586-3889593f8fbd)
+![image](https://github.com/user-attachments/assets/ed898de6-6042-4ead-abbc-6411c1ac857d)
+
 
 
